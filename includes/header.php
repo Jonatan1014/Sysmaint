@@ -74,7 +74,53 @@
                 <a class="nav-link dropdown-toggle arrow-none nav-user px-2" data-bs-toggle="dropdown" href="#"
                     role="button" aria-haspopup="false" aria-expanded="false">
                     <span class="account-user-avatar">
-                        <img  src="<?php echo $_SESSION['user_img']; ?>" alt="user-image" width="32" class="rounded-circle" />
+                        <?php
+                        // Determinar imagen de usuario segura y con fallback
+                        $default_img = 'assets/images/uploads/users/user-default.png';
+                        $user_img_path = $default_img;
+
+                        if (session_status() === PHP_SESSION_NONE) {
+                            @session_start();
+                        }
+
+                        if (!empty(
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            isset($_SESSION['user_img'])
+                        ) && !empty($_SESSION['user_img'])) {
+                            // Posibles rutas relativas que podrían estar guardadas en la DB
+                            $possible = [
+                                __DIR__ . '/../' . ltrim($_SESSION['user_img'], '/'),
+                                __DIR__ . '/../' . ltrim(str_replace('/user/', '/users/', $_SESSION['user_img']), '/'),
+                                __DIR__ . '/../assets/images/uploads/users/' . basename($_SESSION['user_img'])
+                            ];
+
+                            foreach ($possible as $p) {
+                                if (file_exists($p)) {
+                                    // Convertir a ruta relativa desde el webroot
+                                    $user_img_path = str_replace(realpath(__DIR__ . '/../') . DIRECTORY_SEPARATOR, '', realpath($p));
+                                    $user_img_path = str_replace('\\', '/', $user_img_path);
+                                    break;
+                                }
+                            }
+                        }
+                        ?>
+                        <img src="<?php echo $user_img_path; ?>" alt="user-image" width="32" class="rounded-circle" />
                     </span>
                     <span class="d-lg-flex flex-column gap-1 d-none">
                         <h5 class="my-0"><?php echo $_SESSION['user_first_name'] . ' ' . $_SESSION['user_last_name']; ?></h5>

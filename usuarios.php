@@ -198,7 +198,7 @@ $roles = $Usuario_class->obtenerRoles();
                                                 <?php foreach ($usuarios as $usuario): ?>
                                                 <tr>
                                                     <td>
-                                                        <img src="<?php echo !empty($usuario['imagen_perfil']) ? $usuario['imagen_perfil'] : 'assets/images/users/user-default.png'; ?>" 
+                                             <img src="<?php echo !empty($usuario['imagen_perfil']) ? $usuario['imagen_perfil'] : 'assets/images/uploads/users/user-default.png'; ?>" 
                                                              alt="Foto" class="rounded-circle" width="40" height="40">
                                                     </td>
                                                     <td>

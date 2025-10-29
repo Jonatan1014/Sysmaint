@@ -14,32 +14,39 @@ $user_id = $_SESSION['user_id'];
 
 // ==================== SUBIR IMAGEN DE PERFIL ====================
 if (isset($_FILES['imagen_perfil'])) {
-    header('Content-Type: application/json');
-    
+    // Función helper para devolver JSON limpiando cualquier salida previa
+    function send_json_and_exit($payload) {
+        // Limpiar buffers de salida para evitar contenido no-JSON (warnings, espacios, etc.)
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+        header('Content-Type: application/json');
+        echo json_encode($payload);
+        exit;
+    }
+
     $file = $_FILES['imagen_perfil'];
     $allowed_types = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
     $max_size = 5 * 1024 * 1024; // 5MB
     
     // Validar tipo de archivo
     if (!in_array($file['type'], $allowed_types)) {
-        echo json_encode([
+        send_json_and_exit([
             'success' => false,
             'message' => 'Tipo de archivo no permitido. Solo se permiten JPG, PNG y GIF'
         ]);
-        exit;
     }
     
     // Validar tamaño
     if ($file['size'] > $max_size) {
-        echo json_encode([
+        send_json_and_exit([
             'success' => false,
             'message' => 'El archivo es demasiado grande. Máximo 5MB'
         ]);
-        exit;
     }
     
-    // Crear directorio si no existe
-    $upload_dir = '../assets/images/users/';
+    // Crear directorio si no existe (usar carpeta uploads/users para ser consistente con assets existentes)
+    $upload_dir = '../assets/images/uploads/users/';
     if (!file_exists($upload_dir)) {
         mkdir($upload_dir, 0777, true);
     }
@@ -54,20 +61,23 @@ if (isset($_FILES['imagen_perfil'])) {
     
     // Subir archivo
     if (move_uploaded_file($file['tmp_name'], $filepath)) {
-        // Actualizar ruta en base de datos
-        $imagen_url = 'assets/images/users/' . $filename;
+        // Actualizar ruta en base de datos (usar uploads/users para mantener consistencia)
+        $imagen_url = 'assets/images/uploads/users/' . $filename;
         
         try {
             $Usuario_class->actualizarImagenPerfil($user_id, $imagen_url);
+            // Actualizar también la variable de sesión para que el header muestre la nueva imagen sin recargar sesión
+            $_SESSION['user_img'] = $imagen_url;
+            $_SESSION['user_imagen'] = $imagen_url;
             
-            // Eliminar imagen anterior si existe y no es la default
+            // Eliminar imagen anterior si existe y no es la default (ruta en uploads/users)
             if (!empty($usuario_actual['imagen_perfil']) && 
-                $usuario_actual['imagen_perfil'] !== 'assets/images/users/user-default.png' &&
+                $usuario_actual['imagen_perfil'] !== 'assets/images/uploads/users/user-default.png' &&
                 file_exists('../' . $usuario_actual['imagen_perfil'])) {
                 unlink('../' . $usuario_actual['imagen_perfil']);
             }
             
-            echo json_encode([
+            send_json_and_exit([
                 'success' => true,
                 'message' => 'Foto de perfil actualizada correctamente',
                 'imagen_url' => $imagen_url
@@ -77,14 +87,13 @@ if (isset($_FILES['imagen_perfil'])) {
             if (file_exists($filepath)) {
                 unlink($filepath);
             }
-            
-            echo json_encode([
+            send_json_and_exit([
                 'success' => false,
                 'message' => 'Error al actualizar la imagen: ' . $e->getMessage()
             ]);
         }
     } else {
-        echo json_encode([
+        send_json_and_exit([
             'success' => false,
             'message' => 'Error al subir el archivo'
         ]);

@@ -134,7 +134,7 @@ if (!$usuario) {
                                 <div class="card-body">
                                     <div class="text-center">
                                         <div class="profile-image-container mb-3">
-                                            <img src="<?php echo !empty($usuario['imagen_perfil']) ? $usuario['imagen_perfil'] : 'assets/images/users/user-default.png'; ?>" 
+                                    <img src="<?php echo !empty($usuario['imagen_perfil']) ? $usuario['imagen_perfil'] : 'assets/images/uploads/users/user-default.png'; ?>" 
                                                  alt="Foto de perfil" 
                                                  class="rounded-circle profile-image"
                                                  id="preview-imagen">
@@ -158,35 +158,35 @@ if (!$usuario) {
                                             <div class="info-label">
                                                 <i class="mdi mdi-email-outline me-1"></i> Email
                                             </div>
-                                            <div class="info-value"><?php echo htmlspecialchars($usuario['email']); ?></div>
+                                            <div class="text-muted font-13"><?php echo htmlspecialchars($usuario['email']); ?></div>
                                         </div>
                                         
                                         <div class="info-item">
                                             <div class="info-label">
                                                 <i class="mdi mdi-card-account-details-outline me-1"></i> Cédula
                                             </div>
-                                            <div class="info-value"><?php echo htmlspecialchars($usuario['code_cc']); ?></div>
+                                            <div class="text-muted font-13"><?php echo htmlspecialchars($usuario['code_cc']); ?></div>
                                         </div>
                                         
                                         <div class="info-item">
                                             <div class="info-label">
                                                 <i class="mdi mdi-phone-outline me-1"></i> Teléfono
                                             </div>
-                                            <div class="info-value"><?php echo htmlspecialchars($usuario['phone'] ?? 'No registrado'); ?></div>
+                                            <div class="text-muted font-13"><?php echo htmlspecialchars($usuario['phone'] ?? 'No registrado'); ?></div>
                                         </div>
                                         
                                         <div class="info-item">
                                             <div class="info-label">
                                                 <i class="mdi mdi-map-marker-outline me-1"></i> Dirección
                                             </div>
-                                            <div class="info-value"><?php echo htmlspecialchars($usuario['direccion'] ?? 'No registrada'); ?></div>
+                                            <div class="text-muted font-13"><?php echo htmlspecialchars($usuario['direccion'] ?? 'No registrada'); ?></div>
                                         </div>
                                         
                                         <div class="info-item">
                                             <div class="info-label">
                                                 <i class="mdi mdi-calendar-outline me-1"></i> Miembro desde
                                             </div>
-                                            <div class="info-value"><?php echo date('d/m/Y', strtotime($usuario['created_at'])); ?></div>
+                                            <div class="text-muted font-13"><?php echo date('d/m/Y', strtotime($usuario['created_at'])); ?></div>
                                         </div>
                                     </div>
                                 </div>
@@ -359,8 +359,8 @@ if (!$usuario) {
                     `;
                     document.querySelector('.container-fluid').insertBefore(alert, document.querySelector('.row'));
                     
-                    // Actualizar imagen en el header si existe
-                    const headerImg = document.querySelector('.topnav .dropdown-toggle img');
+                    // Actualizar imagen en el header si existe (selector más específico)
+                    const headerImg = document.querySelector('.account-user-avatar img') || document.querySelector('.nav-user img');
                     if (headerImg) {
                         headerImg.src = data.imagen_url;
                     }
@@ -370,7 +370,7 @@ if (!$usuario) {
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Error al procesar la solicitud');
+                // alert('Error al procesar la solicitud');
             });
         }
 

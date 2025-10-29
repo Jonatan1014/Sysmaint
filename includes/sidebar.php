@@ -35,7 +35,7 @@
         <!-- Leftbar User -->
         <div class="leftbar-user">
             <a href="mi-perfil.php">
-                <img src="<?php echo !empty($_SESSION['user_imagen']) ? $_SESSION['user_imagen'] : 'assets/images/users/user-default.png'; ?>" 
+                <img src="<?php echo !empty($_SESSION['user_imagen']) ? $_SESSION['user_imagen'] : 'assets/images/uploads/users/user-default.png'; ?>" 
                      alt="user-image" height="42" class="rounded-circle shadow-sm" />
                 <span class="leftbar-user-name mt-2"><?php echo htmlspecialchars($_SESSION['user_nombre'] ?? 'Usuario'); ?></span>
             </a>
